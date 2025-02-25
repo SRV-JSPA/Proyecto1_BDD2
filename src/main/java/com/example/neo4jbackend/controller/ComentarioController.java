@@ -6,6 +6,8 @@ import com.example.neo4jbackend.model.Comentario;
 import com.example.neo4jbackend.service.ComentarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
+
 
 import java.util.List;
 
@@ -45,5 +47,34 @@ public class ComentarioController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> actualizarComentario(@PathVariable Long id, @RequestBody ComentarioDTO comentarioDTO) {
+        boolean success = comentarioService.actualizarComentario(id, comentarioDTO);
+        if (success) {
+            return ResponseEntity.ok("Comentario actualizado con éxito");
+        } else {
+            return ResponseEntity.badRequest().body("No se encontró el comentario con ID: " + id);
+        }
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarComentario(@PathVariable Long id) {
+        boolean success = comentarioService.eliminarComentario(id);
+        if (success) {
+            return ResponseEntity.ok("Comentario eliminado con éxito");
+        } else {
+            return ResponseEntity.badRequest().body("No se encontró el comentario con ID: " + id);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerComentarioPorId(@PathVariable Long id) {
+        Optional<Comentario> comentarioOpt = comentarioService.obtenerComentarioPorId(id);
+        
+        if (comentarioOpt.isPresent()) {
+            return ResponseEntity.ok(comentarioOpt.get());
+        } else {
+            return ResponseEntity.badRequest().body("No se encontró el comentario con ID: " + id);
+        }
+    }
 }

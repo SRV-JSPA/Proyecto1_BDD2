@@ -12,7 +12,7 @@ public class Persona {
     private String username;
     private String email;
     private String password;
-    private LocalDate fechaRegistro;  // 📌 Se agrega fecha_registro
+    private LocalDate fechaRegistro; 
     private String biografia;
     private List<String> intereses;
     private boolean cuentaVerificada;
@@ -37,7 +37,6 @@ public class Persona {
         this.cuentaVerificada = cuentaVerificada;
     }
 
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

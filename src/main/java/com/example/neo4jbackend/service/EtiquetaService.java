@@ -20,7 +20,6 @@ public class EtiquetaService {
         this.publicacionRepository = publicacionRepository;
     }
 
-    //C
     public void crearEtiqueta(EtiquetaDTO etiquetaDTO) {
         Optional<Etiqueta> etiquetaOpt = etiquetaRepository.findByNombre(etiquetaDTO.getNombre());
 
@@ -30,7 +29,6 @@ public class EtiquetaService {
         }
     }
 
-    //R
     public List<EtiquetaDTO> obtenerTodasLasEtiquetas() {
         List<Etiqueta> etiquetas = etiquetaRepository.findAll();
         return etiquetas.stream()
@@ -44,7 +42,6 @@ public class EtiquetaService {
                 .orElseThrow(() -> new RuntimeException("Etiqueta no encontrada"));
     }
 
-    //U
     public void actualizarEtiqueta(String nombre, EtiquetaDTO etiquetaDTO) {
         Optional<Etiqueta> etiquetaOpt = etiquetaRepository.findByNombre(nombre);
         
@@ -56,8 +53,7 @@ public class EtiquetaService {
             throw new RuntimeException("Etiqueta no encontrada");
         }
     }
-
-    //D
+    
     public void eliminarEtiqueta(String nombre) {
         Optional<Etiqueta> etiquetaOpt = etiquetaRepository.findByNombre(nombre);
         

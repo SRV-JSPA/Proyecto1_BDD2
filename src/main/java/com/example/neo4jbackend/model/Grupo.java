@@ -12,7 +12,7 @@ public class Grupo {
     private String nombre;
     private String descripcion;
     private LocalDate fechaCreacion;
-    private String privacidad; // Público o Privado
+    private String privacidad; 
 
     @Relationship(type = "CREADO_POR", direction = Relationship.Direction.OUTGOING)
     private Persona creador;
@@ -33,7 +33,6 @@ public class Grupo {
         this.creador = creador;
     }
 
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

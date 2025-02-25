@@ -32,7 +32,7 @@ public class ComentarioService {
             Comentario comentario = new Comentario(
                     comentarioDTO.getContenido(),
                     comentarioDTO.getFechaComentario(),
-                    0,  // Número de likes inicia en 0
+                    0,  
                     autorOpt.get(),
                     publicacionOpt.get()
             );
@@ -64,6 +64,32 @@ public class ComentarioService {
 
     public List<Comentario> obtenerTodosLosComentarios() {
         return comentarioRepository.findAll();
+    }
+
+    public boolean actualizarComentario(Long id, ComentarioDTO comentarioDTO) {
+        Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
+    
+        if (comentarioOpt.isPresent()) {
+            Comentario comentario = comentarioOpt.get();
+            comentario.setContenido(comentarioDTO.getContenido());
+            comentario.setFechaComentario(comentarioDTO.getFechaComentario());
+    
+            comentarioRepository.save(comentario);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean eliminarComentario(Long id) {
+        if (comentarioRepository.existsById(id)) {
+            comentarioRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+    
+    public Optional<Comentario> obtenerComentarioPorId(Long id) {
+        return comentarioRepository.findById(id);
     }
     
 }

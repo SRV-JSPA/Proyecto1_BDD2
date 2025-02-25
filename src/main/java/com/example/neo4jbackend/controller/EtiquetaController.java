@@ -16,14 +16,12 @@ public class EtiquetaController {
         this.etiquetaService = etiquetaService;
     }
 
-    //C
     @PostMapping
     public ResponseEntity<String> agregarEtiqueta(@RequestBody EtiquetaDTO etiquetaDTO) {
         etiquetaService.crearEtiqueta(etiquetaDTO);
         return ResponseEntity.ok("Etiqueta creada con éxito");
     }
 
-    //R
     @GetMapping
     public ResponseEntity<List<EtiquetaDTO>> obtenerTodasLasEtiquetas() {
         return ResponseEntity.ok(etiquetaService.obtenerTodasLasEtiquetas());
@@ -34,7 +32,6 @@ public class EtiquetaController {
         return ResponseEntity.ok(etiquetaService.obtenerEtiquetaPorNombre(nombre));
     }
 
-    //U
     @PutMapping("/{nombre}")
     public ResponseEntity<String> actualizarEtiqueta(
             @PathVariable String nombre,
@@ -43,7 +40,6 @@ public class EtiquetaController {
         return ResponseEntity.ok("Etiqueta actualizada con éxito");
     }
 
-    //D
     @DeleteMapping("/{nombre}")
     public ResponseEntity<String> eliminarEtiqueta(@PathVariable String nombre) {
         etiquetaService.eliminarEtiqueta(nombre);

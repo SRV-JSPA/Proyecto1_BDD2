@@ -21,7 +21,7 @@ public class GrupoService {
         this.personaRepository = personaRepository;
     }
 
-    //C
+    
     public void crearGrupo(GrupoDTO grupoDTO) {
         Optional<Persona> creadorOpt = personaRepository.findByUsername(grupoDTO.getUsernameCreador()).stream().findFirst();
 
@@ -39,7 +39,7 @@ public class GrupoService {
         }
     }
 
-    //R
+    
     public List<GrupoDTO> obtenerGrupos() {
         return grupoRepository.findAll().stream()
                 .map(this::convertirADTO)
@@ -53,7 +53,7 @@ public class GrupoService {
                 .orElseThrow(() -> new RuntimeException("Grupo no encontrado"));
     }
 
-    //U
+    
     public void actualizarGrupo(String nombre, GrupoDTO grupoDTO) {
         Optional<Grupo> grupoOpt = grupoRepository.findByNombre(nombre).stream().findFirst();
         
@@ -68,7 +68,7 @@ public class GrupoService {
         }
     }
 
-    //D
+    
     public void eliminarGrupo(String nombre) {
         Optional<Grupo> grupoOpt = grupoRepository.findByNombre(nombre).stream().findFirst();
         

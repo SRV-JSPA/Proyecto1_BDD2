@@ -3,7 +3,7 @@ package com.example.neo4jbackend.dto;
 public class LikeRequest {
     private String username;
     private Long idPublicacion;
-    private Long idComentario; // Agregamos este atributo
+    private Long idComentario;
 
     public LikeRequest() {}
 
@@ -19,6 +19,6 @@ public class LikeRequest {
     public Long getIdPublicacion() { return idPublicacion; }
     public void setIdPublicacion(Long idPublicacion) { this.idPublicacion = idPublicacion; }
 
-    public Long getIdComentario() { return idComentario; } // Agregamos el getter
-    public void setIdComentario(Long idComentario) { this.idComentario = idComentario; } // Agregamos el setter
+    public Long getIdComentario() { return idComentario; } 
+    public void setIdComentario(Long idComentario) { this.idComentario = idComentario; } 
 }
