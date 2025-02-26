@@ -20,25 +20,51 @@ public class PublicacionService {
         this.personaRepository = personaRepository;
     }
 
-    public void crearPublicacion(PublicacionDTO publicacionDTO) {
+    public boolean crearPublicacion(PublicacionDTO publicacionDTO) {
         Optional<Persona> autorOpt = personaRepository.findByUsername(publicacionDTO.getUsernameAutor()).stream().findFirst();
-        
-        if (autorOpt.isPresent()) {
-            Publicacion publicacion = new Publicacion(
-                    publicacionDTO.getContenido(),
-                    publicacionDTO.getFechaPublicacion(),
-                    publicacionDTO.getImagenUrl(),
-                    publicacionDTO.getEtiquetas(),
-                    0,
-                    0,
-                    autorOpt.get()
-            );
-            publicacionRepository.save(publicacion);
-        }
+        if (autorOpt.isEmpty()) return false;
+
+        Publicacion publicacion = new Publicacion(
+                publicacionDTO.getContenido(),
+                publicacionDTO.getFechaPublicacion(),
+                publicacionDTO.getImagenUrl(),
+                publicacionDTO.getEtiquetas(),
+                0,
+                0,
+                autorOpt.get()
+        );
+        publicacionRepository.save(publicacion);
+        return true;
     }
 
     public List<Publicacion> obtenerPublicaciones() {
         return publicacionRepository.findAll();
+    }
+
+    public Optional<Publicacion> obtenerPublicacionPorId(Long id) {
+        return publicacionRepository.findById(id);
+    }
+
+    public boolean actualizarPublicacion(Long id, PublicacionDTO publicacionDTO) {
+        Optional<Publicacion> publicacionOpt = publicacionRepository.findById(id);
+        if (publicacionOpt.isEmpty()) return false;
+
+        Publicacion publicacion = publicacionOpt.get();
+        publicacion.setContenido(publicacionDTO.getContenido());
+        publicacion.setFechaPublicacion(publicacionDTO.getFechaPublicacion());
+        publicacion.setImagenUrl(publicacionDTO.getImagenUrl());
+        publicacion.setEtiquetas(publicacionDTO.getEtiquetas());
+
+        publicacionRepository.save(publicacion);
+        return true;
+    }
+
+    public boolean eliminarPublicacion(Long id) {
+        Optional<Publicacion> publicacionOpt = publicacionRepository.findById(id);
+        if (publicacionOpt.isEmpty()) return false;
+
+        publicacionRepository.delete(publicacionOpt.get());
+        return true;
     }
 
     public boolean darLike(String username, Long idPublicacion) {

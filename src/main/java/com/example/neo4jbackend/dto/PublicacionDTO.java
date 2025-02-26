@@ -1,25 +1,35 @@
 package com.example.neo4jbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class PublicacionDTO {
+    private Long id;  
     private String contenido;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") 
     private LocalDateTime fechaPublicacion;
+    
     private String imagenUrl;
     private List<String> etiquetas;
     private String usernameAutor;
 
     public PublicacionDTO() {}
 
-    public PublicacionDTO(String contenido, LocalDateTime fechaPublicacion, String imagenUrl, 
+    public PublicacionDTO(Long id, String contenido, LocalDateTime fechaPublicacion, String imagenUrl, 
                           List<String> etiquetas, String usernameAutor) {
+        this.id = id;
         this.contenido = contenido;
         this.fechaPublicacion = fechaPublicacion;
         this.imagenUrl = imagenUrl;
         this.etiquetas = etiquetas;
         this.usernameAutor = usernameAutor;
     }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getContenido() { return contenido; }
     public void setContenido(String contenido) { this.contenido = contenido; }
