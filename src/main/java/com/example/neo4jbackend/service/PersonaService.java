@@ -1,4 +1,5 @@
 package com.example.neo4jbackend.service;
+
 import com.example.neo4jbackend.dto.PersonaDTO;
 import com.example.neo4jbackend.dto.SeguirRequest;
 import com.example.neo4jbackend.model.Persona;
@@ -34,9 +35,38 @@ public class PersonaService {
         return personaRepository.findAll();
     }
 
+    public Optional<Persona> obtenerPersonaPorUsername(String username) {
+        return personaRepository.findByUsername(username).stream().findFirst();
+    }
+
+    public boolean actualizarPersona(String username, PersonaDTO personaDTO) {
+        Optional<Persona> personaOpt = obtenerPersonaPorUsername(username);
+        if (personaOpt.isPresent()) {
+            Persona persona = personaOpt.get();
+            persona.setNombre(personaDTO.getNombre());
+            persona.setEmail(personaDTO.getEmail());
+            persona.setPassword(personaDTO.getPassword());
+            persona.setBiografia(personaDTO.getBiografia());
+            persona.setIntereses(personaDTO.getIntereses());
+            persona.setCuentaVerificada(personaDTO.isCuentaVerificada());
+            personaRepository.save(persona);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean eliminarPersona(String username) {
+        Optional<Persona> personaOpt = obtenerPersonaPorUsername(username);
+        if (personaOpt.isPresent()) {
+            personaRepository.delete(personaOpt.get());
+            return true;
+        }
+        return false;
+    }
+
     public boolean seguirUsuario(SeguirRequest request) {
-        Optional<Persona> seguidorOpt = personaRepository.findByUsername(request.getUsernameSeguidor()).stream().findFirst();
-        Optional<Persona> seguidoOpt = personaRepository.findByUsername(request.getUsernameSeguido()).stream().findFirst();
+        Optional<Persona> seguidorOpt = obtenerPersonaPorUsername(request.getUsernameSeguidor());
+        Optional<Persona> seguidoOpt = obtenerPersonaPorUsername(request.getUsernameSeguido());
 
         if (seguidorOpt.isPresent() && seguidoOpt.isPresent()) {
             Persona seguidor = seguidorOpt.get();
