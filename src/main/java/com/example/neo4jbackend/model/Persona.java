@@ -12,7 +12,7 @@ public class Persona {
     private String username;
     private String email;
     private String password;
-    private LocalDate fechaRegistro; 
+    private LocalDate fechaRegistro;
     private String biografia;
     private List<String> intereses;
     private boolean cuentaVerificada;

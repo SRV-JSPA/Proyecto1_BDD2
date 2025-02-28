@@ -50,16 +50,16 @@ public class PersonaController {
 
     @PostMapping("/{seguidor}/seguir/{seguido}")
     public ResponseEntity<String> seguirUsuario(@PathVariable String seguidor, @PathVariable String seguido) {
-        boolean success = personaService.seguirUsuario(seguidor, seguido);
-        return success ? ResponseEntity.ok(seguidor + " ahora sigue a " + seguido) :
-                         ResponseEntity.badRequest().body("Error: " + seguidor + " ya sigue a " + seguido);
+        String result = personaService.seguirUsuario(seguidor, seguido);
+        return result.startsWith("Éxito") ? ResponseEntity.ok(result) :
+                                            ResponseEntity.badRequest().body(result);
     }
 
     @DeleteMapping("/{seguidor}/dejar-de-seguir/{seguido}")
     public ResponseEntity<String> dejarDeSeguir(@PathVariable String seguidor, @PathVariable String seguido) {
-        boolean success = personaService.dejarDeSeguirUsuario(seguidor, seguido);
-        return success ? ResponseEntity.ok(seguidor + " dejó de seguir a " + seguido) :
-                         ResponseEntity.badRequest().body("Error: No existe relación de seguimiento.");
+        String result = personaService.dejarDeSeguirUsuario(seguidor, seguido);
+        return result.startsWith("Éxito") ? ResponseEntity.ok(result) :
+                                            ResponseEntity.badRequest().body(result);
     }
 
     @GetMapping("/{username}/seguidores")

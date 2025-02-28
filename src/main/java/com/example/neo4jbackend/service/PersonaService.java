@@ -66,50 +66,25 @@ public class PersonaService {
         return true;
     }
 
-    public boolean seguirUsuario(String seguidorUsername, String seguidoUsername) {
+    public String seguirUsuario(String seguidorUsername, String seguidoUsername) {
         Optional<Persona> seguidorOpt = obtenerPersonaPorUsername(seguidorUsername);
         Optional<Persona> seguidoOpt = obtenerPersonaPorUsername(seguidoUsername);
 
-        if (seguidorOpt.isPresent() && seguidoOpt.isPresent()) {
-            Persona seguidor = seguidorOpt.get();
-            Persona seguido = seguidoOpt.get();
-
-            List<Persona> seguidos = seguidor.getSeguidos();
-            if (seguidos.stream().anyMatch(p -> p.getUsername().equals(seguidoUsername))) {
-                return false;
-            }
-
-            seguidos.add(seguido);
-            seguidor.setSeguidos(seguidos);
-            personaRepository.save(seguidor);
-            return true;
+        if (seguidorOpt.isEmpty() || seguidoOpt.isEmpty()) {
+            return "Error: Uno o ambos usuarios no existen.";
         }
-        return false;
-    }
 
-    public boolean dejarDeSeguirUsuario(String seguidorUsername, String seguidoUsername) {
-        Optional<Persona> seguidorOpt = obtenerPersonaPorUsername(seguidorUsername);
-        Optional<Persona> seguidoOpt = obtenerPersonaPorUsername(seguidoUsername);
+        Persona seguidor = seguidorOpt.get();
+        Persona seguido = seguidoOpt.get();
 
-        if (seguidorOpt.isPresent() && seguidoOpt.isPresent()) {
-            Persona seguidor = seguidorOpt.get();
-            Persona seguido = seguidoOpt.get();
-
-            List<Persona> seguidos = seguidor.getSeguidos();
-            if (seguidos.removeIf(p -> p.getUsername().equals(seguidoUsername))) {
-                seguidor.setSeguidos(seguidos);
-                personaRepository.save(seguidor);
-                return true;
-            }
+        if (seguidor.getSeguidos().stream().anyMatch(p -> p.getUsername().equals(seguidoUsername))) {
+            return "Error: " + seguidorUsername + " ya sigue a " + seguidoUsername;
         }
-        return false;
-    }
 
-    public List<Persona> obtenerSeguidores(String username) {
-        return personaRepository.findSeguidores(username);
-    }
-
-    public List<Persona> obtenerSeguidos(String username) {
-        return personaRepository.findSeguidos(username);
+        seguidor.getSeguidos().add(seguido);
+        seguido.getSeguidores().add(seguidor);
+        personaRepository.save(seguidor);
+        personaRepository.save(seguido);
+        return "Éxito: " + seguidorUsername + " ahora sigue a " + seguidoUsername;
     }
 }
