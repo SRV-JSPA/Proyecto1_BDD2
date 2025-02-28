@@ -1,7 +1,6 @@
 package com.example.neo4jbackend.service;
 
 import com.example.neo4jbackend.dto.PersonaDTO;
-import com.example.neo4jbackend.dto.SeguirRequest;
 import com.example.neo4jbackend.model.Persona;
 import com.example.neo4jbackend.repository.PersonaRepository;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,11 @@ public class PersonaService {
         this.personaRepository = personaRepository;
     }
 
-    public void crearPersona(PersonaDTO personaDTO) {
+    public boolean crearPersona(PersonaDTO personaDTO) {
+        if (personaRepository.findByUsername(personaDTO.getUsername()).stream().findFirst().isPresent()) {
+            return false;
+        }
+
         Persona persona = new Persona(
                 personaDTO.getNombre(),
                 personaDTO.getUsername(),
@@ -29,6 +32,7 @@ public class PersonaService {
                 personaDTO.isCuentaVerificada()
         );
         personaRepository.save(persona);
+        return true;
     }
 
     public List<Persona> obtenerPersonas() {
@@ -41,46 +45,71 @@ public class PersonaService {
 
     public boolean actualizarPersona(String username, PersonaDTO personaDTO) {
         Optional<Persona> personaOpt = obtenerPersonaPorUsername(username);
-        if (personaOpt.isPresent()) {
-            Persona persona = personaOpt.get();
-            persona.setNombre(personaDTO.getNombre());
-            persona.setEmail(personaDTO.getEmail());
-            persona.setPassword(personaDTO.getPassword());
-            persona.setBiografia(personaDTO.getBiografia());
-            persona.setIntereses(personaDTO.getIntereses());
-            persona.setCuentaVerificada(personaDTO.isCuentaVerificada());
-            personaRepository.save(persona);
-            return true;
-        }
-        return false;
+        if (personaOpt.isEmpty()) return false;
+
+        Persona persona = personaOpt.get();
+        persona.setNombre(personaDTO.getNombre());
+        persona.setEmail(personaDTO.getEmail());
+        persona.setPassword(personaDTO.getPassword());
+        persona.setBiografia(personaDTO.getBiografia());
+        persona.setIntereses(personaDTO.getIntereses());
+        persona.setCuentaVerificada(personaDTO.isCuentaVerificada());
+        personaRepository.save(persona);
+        return true;
     }
 
     public boolean eliminarPersona(String username) {
         Optional<Persona> personaOpt = obtenerPersonaPorUsername(username);
-        if (personaOpt.isPresent()) {
-            personaRepository.delete(personaOpt.get());
-            return true;
-        }
-        return false;
+        if (personaOpt.isEmpty()) return false;
+
+        personaRepository.delete(personaOpt.get());
+        return true;
     }
 
-    public boolean seguirUsuario(SeguirRequest request) {
-        Optional<Persona> seguidorOpt = obtenerPersonaPorUsername(request.getUsernameSeguidor());
-        Optional<Persona> seguidoOpt = obtenerPersonaPorUsername(request.getUsernameSeguido());
+    public boolean seguirUsuario(String seguidorUsername, String seguidoUsername) {
+        Optional<Persona> seguidorOpt = obtenerPersonaPorUsername(seguidorUsername);
+        Optional<Persona> seguidoOpt = obtenerPersonaPorUsername(seguidoUsername);
 
         if (seguidorOpt.isPresent() && seguidoOpt.isPresent()) {
             Persona seguidor = seguidorOpt.get();
             Persona seguido = seguidoOpt.get();
 
-            if (!seguidor.getSeguidos().contains(seguido)) {
-                seguidor.getSeguidos().add(seguido);
-                seguido.getSeguidores().add(seguidor);
+            List<Persona> seguidos = seguidor.getSeguidos();
+            if (seguidos.stream().anyMatch(p -> p.getUsername().equals(seguidoUsername))) {
+                return false;
+            }
 
+            seguidos.add(seguido);
+            seguidor.setSeguidos(seguidos);
+            personaRepository.save(seguidor);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean dejarDeSeguirUsuario(String seguidorUsername, String seguidoUsername) {
+        Optional<Persona> seguidorOpt = obtenerPersonaPorUsername(seguidorUsername);
+        Optional<Persona> seguidoOpt = obtenerPersonaPorUsername(seguidoUsername);
+
+        if (seguidorOpt.isPresent() && seguidoOpt.isPresent()) {
+            Persona seguidor = seguidorOpt.get();
+            Persona seguido = seguidoOpt.get();
+
+            List<Persona> seguidos = seguidor.getSeguidos();
+            if (seguidos.removeIf(p -> p.getUsername().equals(seguidoUsername))) {
+                seguidor.setSeguidos(seguidos);
                 personaRepository.save(seguidor);
-                personaRepository.save(seguido);
                 return true;
             }
         }
         return false;
+    }
+
+    public List<Persona> obtenerSeguidores(String username) {
+        return personaRepository.findSeguidores(username);
+    }
+
+    public List<Persona> obtenerSeguidos(String username) {
+        return personaRepository.findSeguidos(username);
     }
 }

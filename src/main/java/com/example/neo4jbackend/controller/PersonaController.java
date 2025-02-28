@@ -1,7 +1,6 @@
 package com.example.neo4jbackend.controller;
 
 import com.example.neo4jbackend.dto.PersonaDTO;
-import com.example.neo4jbackend.dto.SeguirRequest;
 import com.example.neo4jbackend.model.Persona;
 import com.example.neo4jbackend.service.PersonaService;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,9 @@ public class PersonaController {
 
     @PostMapping
     public ResponseEntity<String> agregarPersona(@RequestBody PersonaDTO personaDTO) {
-        personaService.crearPersona(personaDTO);
-        return ResponseEntity.ok("Persona creada con éxito");
+        boolean creada = personaService.crearPersona(personaDTO);
+        return creada ? ResponseEntity.ok("Persona creada con éxito") :
+                        ResponseEntity.badRequest().body("Error: El username ya está en uso.");
     }
 
     @GetMapping
@@ -48,13 +48,27 @@ public class PersonaController {
         return eliminado ? ResponseEntity.ok("Persona eliminada") : ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/seguir")
-    public ResponseEntity<String> seguirUsuario(@RequestBody SeguirRequest request) {
-        boolean success = personaService.seguirUsuario(request);
-        if (success) {
-            return ResponseEntity.ok(request.getUsernameSeguidor() + " ahora sigue a " + request.getUsernameSeguido());
-        } else {
-            return ResponseEntity.badRequest().body("Error: uno o ambos usuarios no existen o ya existe la relación.");
-        }
+    @PostMapping("/{seguidor}/seguir/{seguido}")
+    public ResponseEntity<String> seguirUsuario(@PathVariable String seguidor, @PathVariable String seguido) {
+        boolean success = personaService.seguirUsuario(seguidor, seguido);
+        return success ? ResponseEntity.ok(seguidor + " ahora sigue a " + seguido) :
+                         ResponseEntity.badRequest().body("Error: " + seguidor + " ya sigue a " + seguido);
+    }
+
+    @DeleteMapping("/{seguidor}/dejar-de-seguir/{seguido}")
+    public ResponseEntity<String> dejarDeSeguir(@PathVariable String seguidor, @PathVariable String seguido) {
+        boolean success = personaService.dejarDeSeguirUsuario(seguidor, seguido);
+        return success ? ResponseEntity.ok(seguidor + " dejó de seguir a " + seguido) :
+                         ResponseEntity.badRequest().body("Error: No existe relación de seguimiento.");
+    }
+
+    @GetMapping("/{username}/seguidores")
+    public List<Persona> obtenerSeguidores(@PathVariable String username) {
+        return personaService.obtenerSeguidores(username);
+    }
+
+    @GetMapping("/{username}/seguidos")
+    public List<Persona> obtenerSeguidos(@PathVariable String username) {
+        return personaService.obtenerSeguidos(username);
     }
 }
