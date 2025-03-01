@@ -21,25 +21,33 @@ public class GrupoService {
         this.personaRepository = personaRepository;
     }
 
-    
     public void crearGrupo(GrupoDTO grupoDTO) {
+        if (grupoDTO.getDescripcion().length() > 500) {
+            throw new RuntimeException("La descripción del grupo no puede superar los 500 caracteres");
+        }
+
+        if (!grupoDTO.getPrivacidad().equalsIgnoreCase("publico") && !grupoDTO.getPrivacidad().equalsIgnoreCase("privado")) {
+            throw new RuntimeException("Tipo de privacidad no válido. Debe ser 'publico' o 'privado'");
+        }
+
         Optional<Persona> creadorOpt = personaRepository.findByUsername(grupoDTO.getUsernameCreador()).stream().findFirst();
 
         if (creadorOpt.isPresent()) {
+            Persona creador = creadorOpt.get();
             Grupo grupo = new Grupo(
                     grupoDTO.getNombre(),
                     grupoDTO.getDescripcion(),
                     grupoDTO.getFechaCreacion(),
                     grupoDTO.getPrivacidad(),
-                    creadorOpt.get()
+                    creador
             );
+            grupo.getModeradores().add(creador);
             grupoRepository.save(grupo);
         } else {
             throw new RuntimeException("Creador no encontrado");
         }
     }
 
-    
     public List<GrupoDTO> obtenerGrupos() {
         return grupoRepository.findAll().stream()
                 .map(this::convertirADTO)
@@ -53,12 +61,20 @@ public class GrupoService {
                 .orElseThrow(() -> new RuntimeException("Grupo no encontrado"));
     }
 
-    
     public void actualizarGrupo(String nombre, GrupoDTO grupoDTO) {
         Optional<Grupo> grupoOpt = grupoRepository.findByNombre(nombre).stream().findFirst();
         
         if (grupoOpt.isPresent()) {
             Grupo grupo = grupoOpt.get();
+            
+            if (grupoDTO.getDescripcion().length() > 500) {
+                throw new RuntimeException("La descripción del grupo no puede superar los 500 caracteres");
+            }
+            
+            if (!grupoDTO.getPrivacidad().equalsIgnoreCase("publico") && !grupoDTO.getPrivacidad().equalsIgnoreCase("privado")) {
+                throw new RuntimeException("Tipo de privacidad no válido. Debe ser 'publico' o 'privado'");
+            }
+            
             grupo.setDescripcion(grupoDTO.getDescripcion());
             grupo.setPrivacidad(grupoDTO.getPrivacidad());
             
@@ -68,7 +84,6 @@ public class GrupoService {
         }
     }
 
-    
     public void eliminarGrupo(String nombre) {
         Optional<Grupo> grupoOpt = grupoRepository.findByNombre(nombre).stream().findFirst();
         
@@ -86,6 +101,10 @@ public class GrupoService {
         if (personaOpt.isPresent() && grupoOpt.isPresent()) {
             Persona persona = personaOpt.get();
             Grupo grupo = grupoOpt.get();
+
+            if (grupo.getPrivacidad().equalsIgnoreCase("privado")) {
+                throw new RuntimeException("No puedes unirte a un grupo privado sin invitación o aprobación");
+            }
 
             if (!grupo.getMiembros().contains(persona)) {
                 grupo.getMiembros().add(persona);
@@ -112,6 +131,7 @@ public class GrupoService {
         }
         return false;
     }
+
     private GrupoDTO convertirADTO(Grupo grupo) {
         return new GrupoDTO(
             grupo.getNombre(),
