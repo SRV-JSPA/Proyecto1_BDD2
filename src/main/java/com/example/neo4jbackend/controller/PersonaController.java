@@ -36,18 +36,6 @@ public class PersonaController {
         return persona.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{username}")
-    public ResponseEntity<String> actualizarPersona(@PathVariable String username, @RequestBody PersonaDTO personaDTO) {
-        boolean actualizado = personaService.actualizarPersona(username, personaDTO);
-        return actualizado ? ResponseEntity.ok("Persona actualizada") : ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{username}")
-    public ResponseEntity<String> eliminarPersona(@PathVariable String username) {
-        boolean eliminado = personaService.eliminarPersona(username);
-        return eliminado ? ResponseEntity.ok("Persona eliminada") : ResponseEntity.notFound().build();
-    }
-
     @PostMapping("/{seguidor}/seguir/{seguido}")
     public ResponseEntity<String> seguirUsuario(@PathVariable String seguidor, @PathVariable String seguido) {
         String result = personaService.seguirUsuario(seguidor, seguido);

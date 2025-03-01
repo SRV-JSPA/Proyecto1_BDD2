@@ -4,7 +4,6 @@ import com.example.neo4jbackend.dto.PersonaDTO;
 import com.example.neo4jbackend.model.Persona;
 import com.example.neo4jbackend.repository.PersonaRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -83,8 +82,39 @@ public class PersonaService {
 
         seguidor.getSeguidos().add(seguido);
         seguido.getSeguidores().add(seguidor);
+
         personaRepository.save(seguidor);
         personaRepository.save(seguido);
+
         return "Éxito: " + seguidorUsername + " ahora sigue a " + seguidoUsername;
+    }
+
+    public String dejarDeSeguirUsuario(String seguidorUsername, String seguidoUsername) {
+        Optional<Persona> seguidorOpt = obtenerPersonaPorUsername(seguidorUsername);
+        Optional<Persona> seguidoOpt = obtenerPersonaPorUsername(seguidoUsername);
+
+        if (seguidorOpt.isEmpty() || seguidoOpt.isEmpty()) {
+            return "Error: Uno o ambos usuarios no existen.";
+        }
+
+        Persona seguidor = seguidorOpt.get();
+        Persona seguido = seguidoOpt.get();
+
+        if (seguidor.getSeguidos().removeIf(p -> p.getUsername().equals(seguidoUsername))) {
+            seguido.getSeguidores().removeIf(p -> p.getUsername().equals(seguidorUsername));
+            personaRepository.save(seguidor);
+            personaRepository.save(seguido);
+            return "Éxito: " + seguidorUsername + " dejó de seguir a " + seguidoUsername;
+        }
+
+        return "Error: " + seguidorUsername + " no sigue a " + seguidoUsername;
+    }
+
+    public List<Persona> obtenerSeguidores(String username) {
+        return personaRepository.findSeguidores(username);
+    }
+
+    public List<Persona> obtenerSeguidos(String username) {
+        return personaRepository.findSeguidos(username);
     }
 }

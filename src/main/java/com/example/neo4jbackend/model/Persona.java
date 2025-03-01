@@ -2,6 +2,7 @@ package com.example.neo4jbackend.model;
 
 import org.springframework.data.neo4j.core.schema.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Node("Persona")
@@ -18,10 +19,10 @@ public class Persona {
     private boolean cuentaVerificada;
 
     @Relationship(type = "SIGUE_A", direction = Relationship.Direction.OUTGOING)
-    private List<Persona> seguidos;
+    private List<Persona> seguidos = new ArrayList<>();
 
     @Relationship(type = "SIGUE_A", direction = Relationship.Direction.INCOMING)
-    private List<Persona> seguidores;
+    private List<Persona> seguidores = new ArrayList<>();
 
     public Persona() {}
 
@@ -35,6 +36,8 @@ public class Persona {
         this.biografia = biografia;
         this.intereses = intereses;
         this.cuentaVerificada = cuentaVerificada;
+        this.seguidos = new ArrayList<>();
+        this.seguidores = new ArrayList<>();
     }
 
     public Long getId() { return id; }
