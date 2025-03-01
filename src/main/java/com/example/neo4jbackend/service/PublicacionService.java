@@ -67,21 +67,55 @@ public class PublicacionService {
         return true;
     }
 
-    public boolean darLike(String username, Long idPublicacion) {
+    public String darLike(String username, Long idPublicacion) {
         Optional<Persona> personaOpt = personaRepository.findByUsername(username).stream().findFirst();
         Optional<Publicacion> publicacionOpt = publicacionRepository.findById(idPublicacion);
 
-        if (personaOpt.isPresent() && publicacionOpt.isPresent()) {
-            Persona persona = personaOpt.get();
-            Publicacion publicacion = publicacionOpt.get();
-
-            if (!publicacion.getLikes().contains(persona)) {
-                publicacion.getLikes().add(persona);
-                publicacion.setNumLikes(publicacion.getNumLikes() + 1);
-                publicacionRepository.save(publicacion);
-                return true;
-            }
+        if (personaOpt.isEmpty() || publicacionOpt.isEmpty()) {
+            return "Error: Usuario o publicación no encontrados.";
         }
-        return false;
+
+        Persona persona = personaOpt.get();
+        Publicacion publicacion = publicacionOpt.get();
+
+        if (publicacion.getLikes().contains(persona)) {
+            return "Error: " + username + " ya ha dado like a esta publicación.";
+        }
+
+        publicacion.getLikes().add(persona);
+        publicacion.setNumLikes(publicacion.getNumLikes() + 1);
+        publicacionRepository.save(publicacion);
+
+        return "Éxito: " + username + " le dio like a la publicación " + idPublicacion;
+    }
+
+    public String quitarLike(String username, Long idPublicacion) {
+        Optional<Persona> personaOpt = personaRepository.findByUsername(username).stream().findFirst();
+        Optional<Publicacion> publicacionOpt = publicacionRepository.findById(idPublicacion);
+
+        if (personaOpt.isEmpty() || publicacionOpt.isEmpty()) {
+            return "Error: Usuario o publicación no encontrados.";
+        }
+
+        Persona persona = personaOpt.get();
+        Publicacion publicacion = publicacionOpt.get();
+
+        if (!publicacion.getLikes().contains(persona)) {
+            return "Error: " + username + " no ha dado like a esta publicación.";
+        }
+
+        publicacion.getLikes().remove(persona);
+        publicacion.setNumLikes(publicacion.getNumLikes() - 1);
+        publicacionRepository.save(publicacion);
+
+        return "Éxito: " + username + " quitó su like de la publicación " + idPublicacion;
+    }
+
+    public List<Persona> obtenerLikesDePublicacion(Long idPublicacion) {
+        return publicacionRepository.findLikesDePublicacion(idPublicacion);
+    }
+
+    public List<Publicacion> obtenerPublicacionesLikeadasPorUsuario(String username) {
+        return publicacionRepository.findPublicacionesLikeadasPorUsuario(username);
     }
 }

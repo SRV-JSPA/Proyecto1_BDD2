@@ -2,6 +2,7 @@ package com.example.neo4jbackend.controller;
 
 import com.example.neo4jbackend.dto.PublicacionDTO;
 import com.example.neo4jbackend.dto.LikeRequest;
+import com.example.neo4jbackend.model.Persona;
 import com.example.neo4jbackend.model.Publicacion;
 import com.example.neo4jbackend.service.PublicacionService;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +54,25 @@ public class PublicacionController {
 
     @PostMapping("/darLike")
     public ResponseEntity<String> darLike(@RequestBody LikeRequest likeRequest) {
-        boolean success = publicacionService.darLike(likeRequest.getUsername(), likeRequest.getIdPublicacion());
-        return success ? ResponseEntity.ok(likeRequest.getUsername() + " le dio like a la publicación " + likeRequest.getIdPublicacion()) :
-                         ResponseEntity.badRequest().body("Error: Usuario o publicación no encontrados o ya ha dado like.");
+        String result = publicacionService.darLike(likeRequest.getUsername(), likeRequest.getIdPublicacion());
+        return result.startsWith("Éxito") ? ResponseEntity.ok(result) :
+                                            ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("/quitarLike")
+    public ResponseEntity<String> quitarLike(@RequestBody LikeRequest likeRequest) {
+        String result = publicacionService.quitarLike(likeRequest.getUsername(), likeRequest.getIdPublicacion());
+        return result.startsWith("Éxito") ? ResponseEntity.ok(result) :
+                                            ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("/{id}/likes")
+    public List<Persona> obtenerLikesDePublicacion(@PathVariable Long id) {
+        return publicacionService.obtenerLikesDePublicacion(id);
+    }
+
+    @GetMapping("/likes/{username}")
+    public List<Publicacion> obtenerPublicacionesLikeadas(@PathVariable String username) {
+        return publicacionService.obtenerPublicacionesLikeadasPorUsuario(username);
     }
 }

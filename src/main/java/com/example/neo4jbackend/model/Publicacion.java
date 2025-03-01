@@ -2,6 +2,7 @@ package com.example.neo4jbackend.model;
 
 import org.springframework.data.neo4j.core.schema.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Node("Publicacion")
@@ -19,10 +20,10 @@ public class Publicacion {
     private Persona autor;
 
     @Relationship(type = "DA_LIKE", direction = Relationship.Direction.INCOMING)
-    private List<Persona> likes;
+    private List<Persona> likes = new ArrayList<>();
 
     @Relationship(type = "TIENE_HASHTAG", direction = Relationship.Direction.OUTGOING)
-    private List<Etiqueta> hashtags;
+    private List<Etiqueta> hashtags = new ArrayList<>();
 
     public Publicacion() {}
 
@@ -35,6 +36,8 @@ public class Publicacion {
         this.numLikes = numLikes;
         this.numComentarios = numComentarios;
         this.autor = autor;
+        this.likes = new ArrayList<>();
+        this.hashtags = new ArrayList<>();
     }
 
     public Long getId() { return id; }
