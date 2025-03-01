@@ -131,6 +131,60 @@ public class GrupoService {
         }
         return false;
     }
+    public boolean agregarMiembro(String nombreGrupo, String username) {
+        Optional<Persona> personaOpt = personaRepository.findByUsername(username).stream().findFirst();
+        Optional<Grupo> grupoOpt = grupoRepository.findByNombre(nombreGrupo).stream().findFirst();
+
+        if (personaOpt.isPresent() && grupoOpt.isPresent()) {
+            Persona persona = personaOpt.get();
+            Grupo grupo = grupoOpt.get();
+
+            if (!grupo.getMiembros().contains(persona)) {
+                grupo.getMiembros().add(persona);
+                grupoRepository.save(grupo);
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean removerMiembro(String nombreGrupo, String username) {
+        Optional<Grupo> grupoOpt = grupoRepository.findByNombre(nombreGrupo).stream().findFirst();
+
+        if (grupoOpt.isPresent()) {
+            Grupo grupo = grupoOpt.get();
+            grupo.getMiembros().removeIf(persona -> persona.getUsername().equals(username));
+            grupoRepository.save(grupo);
+            return true;
+        }
+        return false;
+    }
+    public boolean agregarModerador(String nombreGrupo, String username) {
+        Optional<Persona> personaOpt = personaRepository.findByUsername(username).stream().findFirst();
+        Optional<Grupo> grupoOpt = grupoRepository.findByNombre(nombreGrupo).stream().findFirst();
+
+        if (personaOpt.isPresent() && grupoOpt.isPresent()) {
+            Persona persona = personaOpt.get();
+            Grupo grupo = grupoOpt.get();
+
+            if (!grupo.getModeradores().contains(persona)) {
+                grupo.getModeradores().add(persona);
+                grupoRepository.save(grupo);
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean removerModerador(String nombreGrupo, String username) {
+        Optional<Grupo> grupoOpt = grupoRepository.findByNombre(nombreGrupo).stream().findFirst();
+
+        if (grupoOpt.isPresent()) {
+            Grupo grupo = grupoOpt.get();
+            grupo.getModeradores().removeIf(persona -> persona.getUsername().equals(username));
+            grupoRepository.save(grupo);
+            return true;
+        }
+        return false;
+    }
 
     private GrupoDTO convertirADTO(Grupo grupo) {
         return new GrupoDTO(

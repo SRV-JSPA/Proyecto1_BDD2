@@ -68,4 +68,53 @@ public class GrupoController {
             return ResponseEntity.badRequest().body("Error: el usuario o el grupo no existen o ya es moderador.");
         }
     }
+
+    @PostMapping("/{nombreGrupo}/miembros/agregar")
+    public ResponseEntity<String> agregarMiembro(
+            @PathVariable String nombreGrupo,
+            @RequestParam String username) {
+        boolean success = grupoService.agregarMiembro(nombreGrupo, username);
+        if (success) {
+            return ResponseEntity.ok(username + " ha sido agregado al grupo " + nombreGrupo);
+        } else {
+            return ResponseEntity.badRequest().body("Error: el usuario o el grupo no existen o ya es miembro.");
+        }
+    }
+
+    @DeleteMapping("/{nombreGrupo}/miembros/eliminar")
+    public ResponseEntity<String> removerMiembro(
+            @PathVariable String nombreGrupo,
+            @RequestParam String username) {
+        boolean success = grupoService.removerMiembro(nombreGrupo, username);
+        if (success) {
+            return ResponseEntity.ok(username + " ha sido eliminado del grupo " + nombreGrupo);
+        } else {
+            return ResponseEntity.badRequest().body("Error: el usuario no es miembro del grupo o el grupo no existe.");
+        }
+    }
+
+    @PostMapping("/{nombreGrupo}/moderadores/agregar")
+    public ResponseEntity<String> agregarModerador(
+            @PathVariable String nombreGrupo,
+            @RequestParam String username) {
+        boolean success = grupoService.agregarModerador(nombreGrupo, username);
+        if (success) {
+            return ResponseEntity.ok(username + " ahora es moderador del grupo " + nombreGrupo);
+        } else {
+            return ResponseEntity.badRequest().body("Error: el usuario o el grupo no existen o ya es moderador.");
+        }
+    }
+
+    @DeleteMapping("/{nombreGrupo}/moderadores/eliminar")
+    public ResponseEntity<String> removerModerador(
+            @PathVariable String nombreGrupo,
+            @RequestParam String username) {
+        boolean success = grupoService.removerModerador(nombreGrupo, username);
+        if (success) {
+            return ResponseEntity.ok(username + " ya no es moderador del grupo " + nombreGrupo);
+        } else {
+            return ResponseEntity.badRequest().body("Error: el usuario no es moderador del grupo o el grupo no existe.");
+        }
+    }
+    
 }
