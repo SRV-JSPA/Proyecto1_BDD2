@@ -100,8 +100,10 @@ public class PersonaService {
         Persona seguidor = seguidorOpt.get();
         Persona seguido = seguidoOpt.get();
 
-        if (seguidor.getSeguidos().removeIf(p -> p.getUsername().equals(seguidoUsername))) {
-            seguido.getSeguidores().removeIf(p -> p.getUsername().equals(seguidorUsername));
+        boolean eliminadoSeguidor = seguidor.getSeguidos().removeIf(p -> p.getUsername().equals(seguidoUsername));
+        boolean eliminadoSeguido = seguido.getSeguidores().removeIf(p -> p.getUsername().equals(seguidorUsername));
+
+        if (eliminadoSeguidor && eliminadoSeguido) {
             personaRepository.save(seguidor);
             personaRepository.save(seguido);
             return "Éxito: " + seguidorUsername + " dejó de seguir a " + seguidoUsername;
