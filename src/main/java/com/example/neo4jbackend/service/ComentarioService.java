@@ -10,8 +10,12 @@ import com.example.neo4jbackend.repository.PublicacionRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
+import org.springframework.data.neo4j.core.Neo4jClient;
 
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -19,11 +23,13 @@ public class ComentarioService {
     private final ComentarioRepository comentarioRepository;
     private final PersonaRepository personaRepository;
     private final PublicacionRepository publicacionRepository;
+    private final Neo4jClient neo4jClient;
 
-    public ComentarioService(ComentarioRepository comentarioRepository, PersonaRepository personaRepository, PublicacionRepository publicacionRepository) {
+    public ComentarioService(Neo4jClient neo4jClient, ComentarioRepository comentarioRepository, PersonaRepository personaRepository, PublicacionRepository publicacionRepository) {
         this.comentarioRepository = comentarioRepository;
         this.personaRepository = personaRepository;
         this.publicacionRepository = publicacionRepository;
+        this.neo4jClient = neo4jClient;
     }
 
     public void crearComentario(ComentarioDTO comentarioDTO) {
@@ -35,7 +41,7 @@ public class ComentarioService {
         }
         
         Optional<Persona> autorOpt = personaRepository.findByUsername(comentarioDTO.getUsernameAutor()).stream().findFirst();
-        Optional<Publicacion> publicacionOpt = publicacionRepository.findById(comentarioDTO.getIdPublicacion());
+        Optional<Publicacion> publicacionOpt = publicacionRepository.findById(comentarioDTO.getId());
 
         if (autorOpt.isEmpty()) {
             throw new IllegalArgumentException("El usuario que intenta comentar no existe.");
@@ -114,11 +120,93 @@ public class ComentarioService {
         return false;
     }
 
-    public List<Comentario> obtenerTodosLosComentarios() {
-        return comentarioRepository.findAll();
+    public List<ComentarioDTO> obtenerTodosLosComentarios() {
+        List<Comentario> comentarios = comentarioRepository.findAll();
+        
+        return comentarios.stream()
+            .map(comentario -> new ComentarioDTO(
+                comentario.getId(),
+                comentario.getContenido(),
+                comentario.getFechaComentario(),
+                comentario.getNumLikes(),
+                comentario.getAutor().getUsername() ,
+                comentario.getPublicacion() != null ? comentario.getPublicacion().getId() : null
+            ))
+            .toList();
     }
     
-    public Optional<Comentario> obtenerComentarioPorId(Long id) {
-        return comentarioRepository.findById(id);
+    public Optional<ComentarioDTO> obtenerComentarioPorId(Long id) {
+        return comentarioRepository.findById(id)
+            .map(comentario -> new ComentarioDTO(
+                comentario.getId(),
+                comentario.getContenido(),
+                comentario.getFechaComentario(),
+                comentario.getNumLikes(),
+                comentario.getAutor() != null ? comentario.getAutor().getUsername() : null, 
+                comentario.getPublicacion() != null ? comentario.getPublicacion().getId() : null 
+            ));
+    }
+
+    public boolean asignarAutor(Long id, String username) {
+        Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
+        Optional<Persona> personaOpt = personaRepository.findByUsername(username).stream().findFirst();
+
+        if (comentarioOpt.isPresent() && personaOpt.isPresent()) {
+            Comentario comentario = comentarioOpt.get();
+            comentario.setAutor(personaOpt.get());
+            comentarioRepository.save(comentario);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean asignarPublicacion(Long id, Long idPublicacion) {
+        Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
+        Optional<Publicacion> publicacionOpt = publicacionRepository.findById(idPublicacion);
+
+        if (comentarioOpt.isPresent() && publicacionOpt.isPresent()) {
+            Comentario comentario = comentarioOpt.get();
+            comentario.setPublicacion(publicacionOpt.get());
+            comentarioRepository.save(comentario);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean quitarLike(String username, Long idComentario, String contenidoComentario) {
+        Optional<Persona> personaOpt = personaRepository.findByUsername(username).stream().findFirst();
+        Optional<Comentario> comentarioOpt = comentarioRepository.findById(idComentario);
+        
+        if (personaOpt.isEmpty() || comentarioOpt.isEmpty()) {
+            return false;  
+        }
+
+        Comentario comentario = comentarioOpt.get();
+
+        String cypherQuery = "MATCH (p:Persona)-[r:DA_LIKE]->(c:Comentario) WHERE p.username = $username AND c.contenido = $contenidoComentario DELETE r";
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        params.put("idComentario", idComentario);  
+        params.put("contenidoComentario", contenidoComentario);  
+    
+        System.out.println("Parámetros: " + params);
+        
+        try {
+            neo4jClient.query(cypherQuery)
+                        .bindAll(params)  
+                        .run();  
+            
+            System.out.println("Like eliminado con éxito para usuario: " + username + " y comentario con ID: " + idComentario);
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; 
+        }
+
+        comentario.setNumLikes(Math.max(0, comentario.getNumLikes() - 1));
+        comentarioRepository.save(comentario);
+        
+        return true;  
     }
 }

@@ -19,10 +19,11 @@ public class ComentarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Comentario>> obtenerTodosLosComentarios() {
-        List<Comentario> comentarios = comentarioService.obtenerTodosLosComentarios();
+    public ResponseEntity<List<ComentarioDTO>> obtenerTodosLosComentarios() {
+        List<ComentarioDTO> comentarios = comentarioService.obtenerTodosLosComentarios();
         return ResponseEntity.ok(comentarios);
     }
+
 
     @PostMapping
     public ResponseEntity<String> agregarComentario(@RequestBody ComentarioDTO comentarioDTO) {
@@ -78,13 +79,38 @@ public class ComentarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerComentarioPorId(@PathVariable Long id) {
-        Optional<Comentario> comentarioOpt = comentarioService.obtenerComentarioPorId(id);
+    public ResponseEntity<ComentarioDTO> obtenerComentarioPorId(@PathVariable Long id) {
+        Optional<ComentarioDTO> comentarioOpt = comentarioService.obtenerComentarioPorId(id);
         
-        if (comentarioOpt.isPresent()) {
-            return ResponseEntity.ok(comentarioOpt.get());
-        } else {
-            return ResponseEntity.badRequest().body("No se encontró el comentario con ID: " + id);
-        }
+        return comentarioOpt
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.badRequest().body(null)); 
     }
+
+    @PostMapping("/{id}/asignarAutor")
+    public ResponseEntity<String> asignarAutor(@PathVariable Long id, @RequestParam String username) {
+        boolean success = comentarioService.asignarAutor(id, username);
+        return success ? ResponseEntity.ok("Autor asignado con éxito") : ResponseEntity.badRequest().body("Error al asignar autor");
+    }
+
+    @PostMapping("/{id}/asignarPublicacion")
+    public ResponseEntity<String> asignarPublicacion(@PathVariable Long id, @RequestParam Long idPublicacion) {
+        boolean success = comentarioService.asignarPublicacion(id, idPublicacion);
+        return success ? ResponseEntity.ok("Publicación asignada con éxito") : ResponseEntity.badRequest().body("Error al asignar publicación");
+    }
+
+    @PostMapping("/{id}/darLike")
+    public ResponseEntity<String> darLike(@PathVariable Long id, @RequestParam String username) {
+        boolean success = comentarioService.darLike(username, id);
+        return success ? ResponseEntity.ok("Like agregado con éxito") : ResponseEntity.badRequest().body("Error al dar like");
+    }
+
+    @PostMapping("/{id}/quitarLike")
+    public ResponseEntity<String> quitarLike(@PathVariable Long id, 
+                                             @RequestParam String username, 
+                                             @RequestParam String contenido) {
+        boolean success = comentarioService.quitarLike(username, id, contenido);
+        return success ? ResponseEntity.ok("Like eliminado con éxito") : ResponseEntity.badRequest().body("Error al quitar like");
+    }
+
 }

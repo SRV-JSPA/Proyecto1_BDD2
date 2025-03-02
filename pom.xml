@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.4.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>neo4jbackend</artifactId>
@@ -54,35 +54,31 @@
 			<artifactId>spring-boot-starter-web</artifactId>
     	</dependency>
 
-		<!-- Spring Boot Starter Neo4j -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-neo4j</artifactId>
 		</dependency>
 
-		<!-- Lombok (para reducir código) -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Spring Boot Starter Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Driver oficial de Neo4j para mejor compatibilidad con AuraDB -->
 		<dependency>
 			<groupId>org.neo4j.driver</groupId>
-			<artifactId>neo4j-java-driver</artifactId> <!-- O la más reciente -->
+			<artifactId>neo4j-java-driver</artifactId> 
 		</dependency>
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.15.3</version> <!-- Usa la última versión disponible -->
+			<version>1.15.3</version> 
 		</dependency>
 	</dependencies>
 
