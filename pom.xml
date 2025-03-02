@@ -79,6 +79,11 @@
 			<groupId>org.neo4j.driver</groupId>
 			<artifactId>neo4j-java-driver</artifactId> <!-- O la más reciente -->
 		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.15.3</version> <!-- Usa la última versión disponible -->
+		</dependency>
 	</dependencies>
 
 	<build>

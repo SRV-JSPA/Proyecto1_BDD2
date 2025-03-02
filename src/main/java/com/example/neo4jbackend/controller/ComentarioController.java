@@ -6,10 +6,8 @@ import com.example.neo4jbackend.model.Comentario;
 import com.example.neo4jbackend.service.ComentarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Optional;
-
-
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/comentarios")
@@ -28,13 +26,17 @@ public class ComentarioController {
 
     @PostMapping
     public ResponseEntity<String> agregarComentario(@RequestBody ComentarioDTO comentarioDTO) {
-        comentarioService.crearComentario(comentarioDTO);
-        return ResponseEntity.ok("Comentario creado con éxito");
+        try {
+            comentarioService.crearComentario(comentarioDTO);
+            return ResponseEntity.ok("Comentario creado con éxito");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/publicacion/{idPublicacion}")
-    public List<Comentario> obtenerComentariosDePublicacion(@PathVariable Long idPublicacion) {
-        return comentarioService.obtenerComentariosDePublicacion(idPublicacion);
+    public ResponseEntity<List<Comentario>> obtenerComentariosDePublicacion(@PathVariable Long idPublicacion) {
+        return ResponseEntity.ok(comentarioService.obtenerComentariosDePublicacion(idPublicacion));
     }
 
     @PostMapping("/darLike")
@@ -49,21 +51,29 @@ public class ComentarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> actualizarComentario(@PathVariable Long id, @RequestBody ComentarioDTO comentarioDTO) {
-        boolean success = comentarioService.actualizarComentario(id, comentarioDTO);
-        if (success) {
-            return ResponseEntity.ok("Comentario actualizado con éxito");
-        } else {
-            return ResponseEntity.badRequest().body("No se encontró el comentario con ID: " + id);
+        try {
+            boolean success = comentarioService.actualizarComentario(id, comentarioDTO);
+            if (success) {
+                return ResponseEntity.ok("Comentario actualizado con éxito");
+            } else {
+                return ResponseEntity.badRequest().body("No se encontró el comentario con ID: " + id);
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarComentario(@PathVariable Long id) {
-        boolean success = comentarioService.eliminarComentario(id);
-        if (success) {
-            return ResponseEntity.ok("Comentario eliminado con éxito");
-        } else {
-            return ResponseEntity.badRequest().body("No se encontró el comentario con ID: " + id);
+    public ResponseEntity<String> eliminarComentario(@PathVariable Long id, @RequestParam String username) {
+        try {
+            boolean success = comentarioService.eliminarComentario(id, username);
+            if (success) {
+                return ResponseEntity.ok("Comentario eliminado con éxito");
+            } else {
+                return ResponseEntity.badRequest().body("No se encontró el comentario con ID: " + id);
+            }
+        } catch (SecurityException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
         }
     }
 
