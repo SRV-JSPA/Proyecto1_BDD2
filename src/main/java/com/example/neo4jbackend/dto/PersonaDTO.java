@@ -13,10 +13,16 @@ public class PersonaDTO {
     private List<String> intereses;
     private boolean cuentaVerificada;
 
+    private boolean esCreador;
+    private boolean esEmpresa;
+    private boolean esPaginaDeFans;
+    private boolean esCantante;
+
     public PersonaDTO() {}
 
     public PersonaDTO(String nombre, String username, String email, String password, LocalDate fechaRegistro,
-                      String biografia, List<String> intereses, boolean cuentaVerificada) {
+                      String biografia, List<String> intereses, boolean cuentaVerificada,
+                      boolean esCreador, boolean esEmpresa, boolean esPaginaDeFans, boolean esCantante) {
         this.nombre = nombre;
         this.username = username;
         this.email = email;
@@ -25,6 +31,10 @@ public class PersonaDTO {
         this.biografia = biografia;
         this.intereses = intereses;
         this.cuentaVerificada = cuentaVerificada;
+        this.esCreador = esCreador;
+        this.esEmpresa = esEmpresa;
+        this.esPaginaDeFans = esPaginaDeFans;
+        this.esCantante = esCantante;
     }
 
     public String getNombre() { return nombre; }
@@ -50,4 +60,16 @@ public class PersonaDTO {
 
     public boolean isCuentaVerificada() { return cuentaVerificada; }
     public void setCuentaVerificada(boolean cuentaVerificada) { this.cuentaVerificada = cuentaVerificada; }
+
+    public boolean isEsCreador() { return esCreador; }
+    public void setEsCreador(boolean esCreador) { this.esCreador = esCreador; }
+
+    public boolean isEsEmpresa() { return esEmpresa; }
+    public void setEsEmpresa(boolean esEmpresa) { this.esEmpresa = esEmpresa; }
+
+    public boolean isEsPaginaDeFans() { return esPaginaDeFans; }
+    public void setEsPaginaDeFans(boolean esPaginaDeFans) { this.esPaginaDeFans = esPaginaDeFans; }
+
+    public boolean isEsCantante() { return esCantante; }
+    public void setEsCantante(boolean esCantante) { this.esCantante = esCantante; }
 }

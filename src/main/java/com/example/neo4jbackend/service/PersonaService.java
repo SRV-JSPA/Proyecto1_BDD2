@@ -19,7 +19,7 @@ public class PersonaService {
         if (personaRepository.findByUsername(personaDTO.getUsername()).stream().findFirst().isPresent()) {
             return false;
         }
-
+    
         Persona persona = new Persona(
                 personaDTO.getNombre(),
                 personaDTO.getUsername(),
@@ -28,12 +28,17 @@ public class PersonaService {
                 personaDTO.getFechaRegistro(),
                 personaDTO.getBiografia(),
                 personaDTO.getIntereses(),
-                personaDTO.isCuentaVerificada()
+                personaDTO.isCuentaVerificada(),
+                personaDTO.isEsCreador(),      
+                personaDTO.isEsEmpresa(),      
+                personaDTO.isEsPaginaDeFans(), 
+                personaDTO.isEsCantante()       
         );
+    
         personaRepository.save(persona);
         return true;
     }
-
+    
     public List<Persona> obtenerPersonas() {
         return personaRepository.findAll();
     }
