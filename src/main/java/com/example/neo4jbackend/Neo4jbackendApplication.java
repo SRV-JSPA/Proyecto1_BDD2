@@ -21,11 +21,11 @@ public class Neo4jbackendApplication {
 	@Bean
 	CommandLineRunner loadData(PersonaService personaService, PublicacionService publicacionService, GrupoService grupoService, EtiquetaService etiquetaService, ComentarioService comentarioService) {
 		return _ -> {
-            //personaService.loadPersonasFromCSV("csv/MOCK_DATA-4.csv");
-            publicacionService.loadPublicacionesFromCSV("csv/MOCK_DATA-9_corrected.csv");
-			//grupoService.loadGruposFromCSV("csv/MOCK_DATA-6.csv");
-			//etiquetaService.loadEtiquetasFromCSV("csv/MOCK_DATA-7.csv");
-			//comentarioService.loadComentariosFromCSV("csv/MOCK_DATA-8.csv");
+            personaService.loadPersonasFromCSV("csv/MOCK_DATA-4.csv");
+            publicacionService.loadPublicacionesFromCSV("csv/MOCK_DATA-5.csv");
+			grupoService.loadGruposFromCSV("csv/MOCK_DATA-6.csv");
+			etiquetaService.loadEtiquetasFromCSV("csv/MOCK_DATA-7.csv");
+			comentarioService.loadComentariosFromCSV("csv/MOCK_DATA-8.csv");
 			//publicacionService.loadRelacionPublicacionEtiquetaFromCSV("csv/publicacion_tiene_hashtag_etiqueta.csv");
         };
 	}
