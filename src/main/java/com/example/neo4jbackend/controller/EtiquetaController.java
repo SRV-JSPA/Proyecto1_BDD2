@@ -1,5 +1,6 @@
 package com.example.neo4jbackend.controller;
 
+import com.example.neo4jbackend.model.Publicacion;
 import com.example.neo4jbackend.dto.EtiquetaDTO;
 import com.example.neo4jbackend.service.EtiquetaService;
 import org.springframework.http.ResponseEntity;
@@ -45,11 +46,30 @@ public class EtiquetaController {
         etiquetaService.eliminarEtiqueta(nombre);
         return ResponseEntity.ok("Etiqueta eliminada con éxito");
     }
+
     @PostMapping("/asignar")
     public ResponseEntity<String> asignarEtiquetaAPublicacion(
             @RequestParam String nombreEtiqueta,
             @RequestParam Long idPublicacion) {
         etiquetaService.agregarEtiquetaAPublicacion(nombreEtiqueta, idPublicacion);
         return ResponseEntity.ok("Etiqueta asignada a la publicación");
+    }
+
+    @DeleteMapping("/eliminar")
+    public ResponseEntity<String> eliminarEtiquetaDePublicacion(
+            @RequestParam String nombreEtiqueta,
+            @RequestParam Long idPublicacion) {
+        etiquetaService.eliminarEtiquetaDePublicacion(nombreEtiqueta, idPublicacion);
+        return ResponseEntity.ok("Etiqueta eliminada de la publicación");
+    }
+
+    @GetMapping("/publicacion/{idPublicacion}")
+    public ResponseEntity<List<EtiquetaDTO>> obtenerEtiquetasDePublicacion(@PathVariable Long idPublicacion) {
+        return ResponseEntity.ok(etiquetaService.obtenerEtiquetasDePublicacion(idPublicacion));
+    }
+
+    @GetMapping("/publicaciones/{nombreEtiqueta}")
+    public ResponseEntity<List<Publicacion>> obtenerPublicacionesDeEtiqueta(@PathVariable String nombreEtiqueta) {
+        return ResponseEntity.ok(etiquetaService.obtenerPublicacionesDeEtiqueta(nombreEtiqueta));
     }
 }

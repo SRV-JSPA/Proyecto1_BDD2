@@ -83,6 +83,40 @@ public class EtiquetaService {
         etiquetaRepository.save(etiqueta);
     }
 
+    public void eliminarEtiquetaDePublicacion(String nombreEtiqueta, Long idPublicacion) {
+        Etiqueta etiqueta = etiquetaRepository.findByNombre(nombreEtiqueta)
+                .orElseThrow(() -> new RuntimeException("Etiqueta no encontrada"));
+    
+        Publicacion publicacion = publicacionRepository.findById(idPublicacion)
+                .orElseThrow(() -> new RuntimeException("Publicación no encontrada"));
+    
+        if (!publicacion.getHashtags().contains(etiqueta)) {
+            throw new RuntimeException("La publicación no tiene esta etiqueta asignada.");
+        }
+    
+        publicacion.getHashtags().remove(etiqueta);
+        etiqueta.setPopularidad(Math.max(0, etiqueta.getPopularidad() - 1));
+    
+        publicacionRepository.save(publicacion);
+        etiquetaRepository.save(etiqueta);
+    }
+
+    public List<EtiquetaDTO> obtenerEtiquetasDePublicacion(Long idPublicacion) {
+        Publicacion publicacion = publicacionRepository.findById(idPublicacion)
+                .orElseThrow(() -> new RuntimeException("Publicación no encontrada"));
+    
+        return publicacion.getHashtags().stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+    }
+    
+    public List<Publicacion> obtenerPublicacionesDeEtiqueta(String nombreEtiqueta) {
+        Etiqueta etiqueta = etiquetaRepository.findByNombre(nombreEtiqueta)
+                .orElseThrow(() -> new RuntimeException("Etiqueta no encontrada"));
+    
+        return etiqueta.getPublicaciones();
+    }
+    
     private void validarNombreEtiqueta(String nombre) {
         if (nombre == null || nombre.isBlank()) {
             throw new RuntimeException("El nombre de la etiqueta no puede estar vacío");
