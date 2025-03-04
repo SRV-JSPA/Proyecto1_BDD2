@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class PublicacionService {
     }
 
     public boolean crearPublicacion(PublicacionDTO publicacionDTO) {
-        Optional<Persona> autorOpt = personaRepository.findByUsername(publicacionDTO.getUsernameAutor()).stream().findFirst();
+        Optional<Persona> autorOpt = personaRepository.findById(publicacionDTO.getAutorId()); 
         if (autorOpt.isEmpty()) return false;
 
         Publicacion publicacion = new Publicacion(
@@ -52,6 +53,7 @@ public class PublicacionService {
         publicacionRepository.save(publicacion);
         return true;
     }
+
 
     public List<Publicacion> obtenerPublicaciones() {
         return publicacionRepository.findAll();
@@ -136,60 +138,67 @@ public class PublicacionService {
     }
 
     public void loadPublicacionesFromCSV(String filePath) {
+        List<Publicacion> batch = new ArrayList<>();
         int totalProcesadas = 0, totalGuardadas = 0, totalDescartadas = 0;
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(Paths.get(filePath).toFile()))
-                .withCSVParser(new CSVParserBuilder().withQuoteChar('"').build()) 
-                .build()) {
-            
+                .withCSVParser(new CSVParserBuilder().withQuoteChar('"').build()).build()) {
+
             List<String[]> records = reader.readAll();
             records.remove(0); 
-
             System.out.println("Cargando publicaciones desde: " + filePath);
 
             for (String[] record : records) {
                 try {
                     totalProcesadas++;
 
-                    System.out.println("\nProcesando publicación:");
-                    System.out.println("Contenido: " + record[1]);
-                    System.out.println("Fecha: " + record[2]);
-                    System.out.println("Imagen: " + record[3]);
-                    System.out.println("Etiquetas: " + record[4]);
-                    System.out.println("NumLikes: " + record[5]);
-                    System.out.println("NumComentarios: " + record[6]);
-                    System.out.println("Autor ID: " + record[7]);
-
-                    Long autorId = Long.parseLong(record[7]); 
-                    Optional<Persona> autorOpt = personaRepository.findById(autorId);
-
-                    if (autorOpt.isEmpty()) {
-                        System.out.println("⚠️ Autor con ID " + autorId + " no encontrado. Saltando publicación.");
+               
+                    if (record.length < 8) {
+                        System.out.println("Registro inválido (menos de 8 columnas): " + Arrays.toString(record));
                         totalDescartadas++;
                         continue;
                     }
 
+                    
+                    Long autorId;
+                    try {
+                        autorId = Long.parseLong(record[7]); 
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: `autor_id` no es un número válido. Registro: " + Arrays.toString(record));
+                        totalDescartadas++;
+                        continue;
+                    }
+
+                    
+                    Optional<Persona> autorOpt = personaRepository.findById(autorId);
+                    if (autorOpt.isEmpty()) {
+                        System.out.println("Autor con ID " + autorId + " no encontrado. Saltando publicación.");
+                        totalDescartadas++;
+                        continue;
+                    }
+
+                    Persona autor = autorOpt.get();
+                    System.out.println("Autor encontrado: " + autor.getId() + " - " + autor.getUsername());
+
+                    
                     String etiquetasRaw = record[4].trim();
                     List<String> etiquetas = Arrays.asList(etiquetasRaw
-                        .replace("[", "").replace("]", "").replace("\"", "") 
-                        .split("\\s*,\\s*")); 
+                            .replace("[", "").replace("]", "").replace("\"", "")
+                            .split("\\s*,\\s*"));
 
-                    Long id = Long.parseLong(record[0]);
-
+                    
                     Publicacion publicacion = new Publicacion(
-                        id,
-                        record[1], 
-                        LocalDateTime.parse(record[2]), 
-                        record[3], 
-                        etiquetas, 
-                        Integer.parseInt(record[5]), 
-                        Integer.parseInt(record[6]), 
-                        autorOpt.get() 
+                            Long.parseLong(record[0]),
+                            record[1],
+                            LocalDateTime.parse(record[2]),
+                            record[3],
+                            etiquetas,
+                            Integer.parseInt(record[5]),
+                            Integer.parseInt(record[6]),
+                            autor
                     );
 
-                    publicacionRepository.save(publicacion);
-                    totalGuardadas++;
-                    System.out.println("Publicación guardada correctamente.");
+                    batch.add(publicacion);
 
                 } catch (NumberFormatException e) {
                     System.err.println("Error de formato en números: " + e.getMessage());
@@ -200,18 +209,22 @@ public class PublicacionService {
                 }
             }
 
+            
+            if (!batch.isEmpty()) {
+                publicacionRepository.saveAll(batch);
+            }
+
             System.out.println("\nResumen de carga de publicaciones:");
-            System.out.println("Total de publicaciones en el CSV: " + totalProcesadas);
-            System.out.println("Publicaciones guardadas en Neo4j: " + totalGuardadas);
+            System.out.println("Total en el CSV: " + totalProcesadas);
+            System.out.println("Publicaciones guardadas: " + batch.size());
             System.out.println("Publicaciones descartadas por autor no encontrado: " + totalDescartadas);
             System.out.println("Proceso completado.");
 
-        } catch (IOException e) {
+        } catch (IOException | CsvException e) {
             System.err.println("Error al leer el archivo CSV: " + e.getMessage());
-        } catch (CsvException e) {
-            System.err.println("Error en el formato del CSV: " + e.getMessage());
         }
     }
+
 
     public void loadRelacionPublicacionEtiquetaFromCSV(String filePath) {
         int totalProcesadas = 0, totalGuardadas = 0, totalDescartadas = 0;

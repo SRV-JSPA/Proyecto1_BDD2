@@ -15,17 +15,19 @@ public class PublicacionDTO {
     private String imagenUrl;
     private List<String> etiquetas;
     private String usernameAutor;
+    private Long autorId;
 
     public PublicacionDTO() {}
 
     public PublicacionDTO(Long id, String contenido, LocalDateTime fechaPublicacion, String imagenUrl, 
-                          List<String> etiquetas, String usernameAutor) {
+                          List<String> etiquetas, String usernameAutor, Long autorId) {
         this.id = id;
         this.contenido = contenido;
         this.fechaPublicacion = fechaPublicacion;
         this.imagenUrl = imagenUrl;
         this.etiquetas = etiquetas;
         this.usernameAutor = usernameAutor;
+        this.autorId = autorId;
     }
 
     public Long getId() { return id; }
@@ -45,4 +47,7 @@ public class PublicacionDTO {
 
     public String getUsernameAutor() { return usernameAutor; }
     public void setUsernameAutor(String usernameAutor) { this.usernameAutor = usernameAutor; }
+
+    public Long getAutorId() { return autorId; } 
+    public void setAutorId(Long autorId) { this.autorId = autorId; } 
 }
