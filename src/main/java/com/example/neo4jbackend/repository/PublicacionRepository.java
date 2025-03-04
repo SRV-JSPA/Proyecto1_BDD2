@@ -5,9 +5,11 @@ import com.example.neo4jbackend.model.Persona;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import java.util.List;
+import java.util.Optional;
 
 public interface PublicacionRepository extends Neo4jRepository<Publicacion, Long> {
     List<Publicacion> findByAutorUsername(String username);
+    Optional<Publicacion> findById(Long id);
 
     @Query("MATCH (p:Publicacion {id: $id}) DETACH DELETE p")
     void deleteById(Long id);

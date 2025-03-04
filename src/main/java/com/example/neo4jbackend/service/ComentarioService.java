@@ -7,12 +7,18 @@ import com.example.neo4jbackend.model.Publicacion;
 import com.example.neo4jbackend.repository.ComentarioRepository;
 import com.example.neo4jbackend.repository.PersonaRepository;
 import com.example.neo4jbackend.repository.PublicacionRepository;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 import org.springframework.data.neo4j.core.Neo4jClient;
 
-
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -209,4 +215,68 @@ public class ComentarioService {
         
         return true;  
     }
+
+    public void loadComentariosFromCSV(String filePath) {
+        int totalProcesadas = 0, totalGuardadas = 0, totalDescartadas = 0;
+    
+        try (CSVReader reader = new CSVReader(new FileReader(Paths.get(filePath).toFile()))) {
+            List<String[]> records = reader.readAll();
+            records.remove(0); 
+    
+            System.out.println("Cargando comentarios desde: " + filePath);
+    
+            for (String[] record : records) {
+                try {
+                    totalProcesadas++;
+    
+                    Long autorId = Long.parseLong(record[4]); 
+                    Long publicacionId = Long.parseLong(record[5]); 
+    
+                    Optional<Persona> autorOpt = personaRepository.findById(autorId);
+                    Optional<Publicacion> publicacionOpt = publicacionRepository.findById(publicacionId);
+    
+   
+                    System.out.println("\nBuscando Autor ID: " + autorId);
+                    System.out.println("Resultado Autor: " + (autorOpt.isPresent() ? "Encontrado" : "No encontrado"));
+    
+                    System.out.println("Buscando Publicación ID: " + publicacionId);
+                    System.out.println("Resultado Publicación: " + (publicacionOpt.isPresent() ? "Encontrado" : "No encontrado"));
+    
+                    if (autorOpt.isEmpty() || publicacionOpt.isEmpty()) {
+                        System.out.println("No se encontró el Autor o la Publicación, saltando comentario.");
+                        totalDescartadas++;
+                        continue;
+                    }
+    
+                    Comentario comentario = new Comentario(
+                        record[1], 
+                        LocalDateTime.parse(record[2]), 
+                        Integer.parseInt(record[3]), 
+                        autorOpt.get(), 
+                        publicacionOpt.get() 
+                    );
+    
+                    comentarioRepository.save(comentario);
+                    totalGuardadas++;
+                    System.out.println("Comentario guardado con ID: " + record[0]);
+    
+                } catch (NumberFormatException e) {
+                    System.err.println("Error de formato en números: " + e.getMessage());
+                } catch (Exception e) {
+                    System.err.println("Error inesperado al procesar un comentario: " + e.getMessage());
+                }
+            }
+    
+            System.out.println("\nResumen de carga de comentarios:");
+            System.out.println("Total en el CSV: " + totalProcesadas);
+            System.out.println("Guardados en Neo4j: " + totalGuardadas);
+            System.out.println("Descartados por autor o publicación no encontrados: " + totalDescartadas);
+            System.out.println("Proceso completado.");
+    
+        } catch (IOException | CsvException e) {
+            System.err.println("Error en el CSV: " + e.getMessage());
+        }
+    }
+    
+    
 }

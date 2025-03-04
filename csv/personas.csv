@@ -1,0 +1,41 @@
+id,nombre,username,email,password,fechaRegistro,biografia,intereses:string[],cuentaVerificada:boolean
+1,Juan Pérez,juanp,juan.perez@email.com,pass123,2023-01-15,"Entusiasta de la tecnología",["programación","viajes","fotografía"],true
+2,María López,mariaL,maria.lopez@email.com,securePass,2023-02-20,"Amante de los libros y el café",["literatura","café","música"],false
+3,Carlos Martínez,carlosm,carlos.martinez@email.com,carlos123,2023-01-05,"Fotógrafo aficionado",["fotografía","naturaleza","deportes"],true
+4,Ana Rodríguez,anaR,ana.rodriguez@email.com,ana2023,2023-03-10,"Viajera y escritora",["viajes","escritura","gastronomía"],true
+5,Pedro Sánchez,pedros,pedro.sanchez@email.com,pedro456,2023-02-01,"Desarrollador web",["programación","videojuegos","cine"],false
+6,Laura Gómez,laurag,laura.gomez@email.com,lauraPass,2023-01-25,"Profesora de yoga",["yoga","meditación","naturaleza"],true
+7,Miguel Fernández,miguelF,miguel.fernandez@email.com,miguelf123,2023-03-15,"Chef profesional",["cocina","vino","viajes"],true
+8,Carmen Díaz,carmenD,carmen.diaz@email.com,carmen789,2023-02-10,"Estudiante de medicina",["medicina","lectura","deporte"],false
+9,David Torres,davidt,david.torres@email.com,davidPass,2023-01-20,"Ingeniero de software",["tecnología","música","fútbol"],true
+10,Sofía Navarro,sofian,sofia.navarro@email.com,sofia123,2023-03-05,"Artista digital",["arte","diseño","fotografía"],false
+11,Roberto Vega,robertov,roberto.vega@email.com,roberto456,2023-02-15,"Profesor de historia",["historia","libros","viajes"],true
+12,Elena Moreno,elenam,elena.moreno@email.com,elenaPass,2023-01-10,"Bióloga marina",["naturaleza","buceo","ciencia"],false
+13,Javier Ruiz,javierr,javier.ruiz@email.com,javier789,2023-03-20,"Músico independiente",["música","conciertos","composición"],true
+14,Patricia Castro,patriciac,patricia.castro@email.com,patricia123,2023-02-05,"Psicóloga",["psicología","mindfulness","literatura"],false
+15,Fernando Gil,fernandog,fernando.gil@email.com,fernandoPass,2023-01-30,"Deportista",["running","natación","ciclismo"],true
+16,Cristina López,cristinal,cristina.lopez@email.com,cristina456,2023-03-25,"Arquitecta",["arquitectura","diseño","arte"],false
+17,Alejandro Pérez,alejandrop,alejandro.perez@email.com,alejandro789,2023-02-25,"Abogado",["derecho","política","economía"],true
+18,Beatriz Martín,beatrizm,beatriz.martin@email.com,beatriz123,2023-01-05,"Periodista",["noticias","escritura","viajes"],false
+19,Raúl Sánchez,rauls,raul.sanchez@email.com,raulPass,2023-03-01,"Chef de repostería",["repostería","cocina","fotografía"],true
+20,Natalia González,nataliag,natalia.gonzalez@email.com,natalia456,2023-02-28,"Veterinaria",["animales","naturaleza","fotografía"],false
+21,Antonio Jiménez,antonioj,antonio.jimenez@email.com,antonio789,2023-01-12,"Empresario",["negocios","inversiones","tecnología"],true
+22,Marina Torres,marinat,marina.torres@email.com,marina123,2023-03-18,"Diseñadora gráfica",["diseño","ilustración","arte"],false
+23,Ricardo Vargas,ricardov,ricardo.vargas@email.com,ricardoPass,2023-02-08,"Ingeniero civil",["construcción","arquitectura","viajes"],true
+24,Isabel Castro,isabelc,isabel.castro@email.com,isabel456,2023-01-22,"Profesora de idiomas",["idiomas","literatura","viajes"],false
+25,Diego Morales,diegom,diego.morales@email.com,diego789,2023-03-14,"Fotógrafo profesional",["fotografía","naturaleza","viajes"],true
+26,Paula Serrano,paulas,paula.serrano@email.com,paula123,2023-02-17,"Enfermera",["medicina","salud","deporte"],false
+27,Óscar Romero,oscarr,oscar.romero@email.com,oscarPass,2023-01-27,"Programador",["programación","videojuegos","tecnología"],true
+28,Alicia Vega,aliciav,alicia.vega@email.com,alicia456,2023-03-22,"Profesora de matemáticas",["matemáticas","educación","lectura"],false
+29,Javier Molina,javierm,javier.molina@email.com,javier789,2023-02-12,"Deportista de élite",["deportes","nutrición","viajes"],true
+30,Sara Ortega,sarao,sara.ortega@email.com,sara123,2023-01-08,"Bióloga",["ciencia","naturaleza","documentales"],false
+31,Mario Luna,mariol,mario.luna@email.com,marioPass,2023-03-28,"Músico",["música","guitarra","conciertos"],true
+32,Lucía Delgado,luciad,lucia.delgado@email.com,lucia456,2023-02-22,"Estudiante de derecho",["derecho","política","debate"],false
+33,Pablo Márquez,pablom,pablo.marquez@email.com,pablo789,2023-01-17,"Chef",["gastronomía","vinos","viajes"],true
+34,Cristina Herrera,cristinah,cristina.herrera@email.com,cristina123,2023-03-07,"Actriz",["teatro","cine","literatura"],false
+35,Daniel Santos,daniels,daniel.santos@email.com,danielPass,2023-02-03,"Periodista deportivo",["deportes","noticias","viajes"],true
+36,Marta Pascual,martap,marta.pascual@email.com,marta456,2023-01-29,"Diseñadora de interiores",["diseño","decoración","arte"],false
+37,Jorge Millán,jorgem,jorge.millan@email.com,jorge789,2023-03-23,"Piloto",["aviación","viajes","fotografía"],true
+38,Andrea Cano,andreac,andrea.cano@email.com,andrea123,2023-02-14,"Trabajadora social",["social","voluntariado","psicología"],false
+39,Víctor Martín,victorm,victor.martin@email.com,victorPass,2023-01-19,"Economista",["economía","política","historia"],true
+40,Sandra Rey,sandrar,sandra.rey@email.com,sandra456,2023-03-11,"Médico",["medicina","salud","ciencia"],false

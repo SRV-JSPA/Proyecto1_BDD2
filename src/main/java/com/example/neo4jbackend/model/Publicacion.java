@@ -7,7 +7,7 @@ import java.util.List;
 
 @Node("Publicacion")
 public class Publicacion {
-    @Id @GeneratedValue
+    @Id 
     private Long id;
     private String contenido;
     private LocalDateTime fechaPublicacion;
@@ -27,8 +27,9 @@ public class Publicacion {
 
     public Publicacion() {}
 
-    public Publicacion(String contenido, LocalDateTime fechaPublicacion, String imagenUrl, 
+    public Publicacion(Long id, String contenido, LocalDateTime fechaPublicacion, String imagenUrl, 
                        List<String> etiquetas, int numLikes, int numComentarios, Persona autor) {
+        this.id = id;
         this.contenido = contenido;
         this.fechaPublicacion = fechaPublicacion;
         this.imagenUrl = imagenUrl;

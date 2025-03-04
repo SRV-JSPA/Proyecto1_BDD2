@@ -5,8 +5,15 @@ import com.example.neo4jbackend.model.Grupo;
 import com.example.neo4jbackend.model.Persona;
 import com.example.neo4jbackend.repository.GrupoRepository;
 import com.example.neo4jbackend.repository.PersonaRepository;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+
 import org.springframework.stereotype.Service;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -194,5 +201,66 @@ public class GrupoService {
             grupo.getPrivacidad(),
             grupo.getCreador().getUsername()
         );
+    }
+
+    public void loadGruposFromCSV(String filePath) {
+        int totalProcesadas = 0, totalGuardadas = 0, totalDescartadas = 0;
+
+        try (CSVReader reader = new CSVReader(new FileReader(Paths.get(filePath).toFile()))) {
+            List<String[]> records = reader.readAll();
+            records.remove(0); 
+
+            System.out.println("Cargando grupos desde: " + filePath);
+
+            for (String[] record : records) {
+                try {
+                    totalProcesadas++;
+
+                    System.out.println("\nProcesando grupo:");
+                    System.out.println("Nombre: " + record[1]);
+                    System.out.println("Descripción: " + record[2]);
+                    System.out.println("Fecha Creación: " + record[3]);
+                    System.out.println("Privacidad: " + record[4]);
+                    System.out.println("Creador ID: " + record[5]);
+
+                    Long creadorId = Long.parseLong(record[5]); 
+                    Optional<Persona> creadorOpt = personaRepository.findById(creadorId);
+
+                    if (creadorOpt.isEmpty()) {
+                        System.out.println("Creador con ID " + creadorId + " no encontrado. Saltando grupo.");
+                        totalDescartadas++;
+                        continue;
+                    }
+
+                    Grupo grupo = new Grupo(
+                        record[1], 
+                        record[2], 
+                        LocalDate.parse(record[3]), 
+                        record[4], 
+                        creadorOpt.get() 
+                    );
+
+                    grupoRepository.save(grupo);
+                    totalGuardadas++;
+                    System.out.println("Grupo guardado correctamente.");
+
+                } catch (NumberFormatException e) {
+                    System.err.println("Error de formato en números: " + e.getMessage());
+                } catch (Exception e) {
+                    System.err.println("Error inesperado al procesar un grupo: " + e.getMessage());
+                }
+            }
+
+            System.out.println("\nResumen de carga de grupos:");
+            System.out.println("Total de grupos en el CSV: " + totalProcesadas);
+            System.out.println("Grupos guardados en Neo4j: " + totalGuardadas);
+            System.out.println("Grupos descartados por creador no encontrado: " + totalDescartadas);
+            System.out.println("Proceso completado.");
+
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo CSV: " + e.getMessage());
+        } catch (CsvException e) {
+            System.err.println("Error en el formato del CSV: " + e.getMessage());
+        }
     }
 }

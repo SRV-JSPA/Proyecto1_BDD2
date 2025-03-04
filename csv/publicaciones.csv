@@ -1,0 +1,31 @@
+id,contenido,fechaPublicacion,imagenUrl,etiquetas:string[],numLikes:int,numComentarios:int,autor_id
+1,"¡Qué día tan increíble para programar! #coding #java",2023-05-15T10:30:00,"https://example.com/images/coding.jpg",["coding"],25,5,1
+2,"Nueva receta que he probado hoy #cocina #recetas",2023-05-14T18:45:00,"https://example.com/images/recipe.jpg",["cocina"],18,3,7
+3,"Mi último viaje a las montañas #naturaleza #aventura",2023-05-13T09:15:00,"https://example.com/images/mountains.jpg",["naturaleza"],42,8,4
+4,"Reflexiones sobre la última novela que he leído #libros",2023-05-12T21:30:00,"https://example.com/images/book.jpg",["libros"],15,4,2
+5,"Nuevo proyecto de fotografía #fotografia #arte",2023-05-11T14:20:00,"https://example.com/images/photography.jpg",["fotografia"],35,7,3
+6,"Mis impresiones sobre el nuevo framework #programacion #tech",2023-05-10T12:10:00,"https://example.com/images/framework.jpg",["programacion"],22,6,5
+7,"Primera clase de yoga del día #yoga #bienestar",2023-05-09T08:30:00,"https://example.com/images/yoga.jpg",["yoga"],30,5,6
+8,"Estudiando para los exámenes finales #medicina #estudio",2023-05-08T22:45:00,"https://example.com/images/study.jpg",["medicina"],12,3,8
+9,"Nuevo algoritmo implementado hoy #coding #algoritmos",2023-05-07T16:20:00,"https://example.com/images/algorithm.jpg",["coding"],20,4,9
+10,"Mi última creación digital #arte #digital",2023-05-06T19:30:00,"https://example.com/images/digitalart.jpg",["arte"],28,6,10
+11,"Explorando nuevos lugares de la ciudad #viajes #ciudad",2023-05-05T11:40:00,"https://example.com/images/city.jpg",["viajes"],32,5,4
+12,"Reflexiones sobre la historia antigua #historia #cultura",2023-05-04T15:25:00,"https://example.com/images/history.jpg",["historia"],18,4,11
+13,"Descubrimiento en el océano #ciencia #oceano",2023-05-03T10:10:00,"https://example.com/images/ocean.jpg",["ciencia"],25,7,12
+14,"Mi nueva composición musical #musica #composicion",2023-05-02T20:15:00,"https://example.com/images/music.jpg",["musica"],40,8,13
+15,"Técnicas de mindfulness para el día a día #psicologia #mindfulness",2023-05-01T14:50:00,"https://example.com/images/mindfulness.jpg",["psicologia"],22,5,14
+16,"Mi nuevo récord personal en maratón #running #deporte",2023-04-30T09:30:00,"https://example.com/images/marathon.jpg",["running"],35,6,15
+17,"Bocetos de mi nuevo proyecto #arquitectura #diseño",2023-04-29T17:40:00,"https://example.com/images/sketch.jpg",["arquitectura"],19,4,16
+18,"Análisis del caso legal más reciente #derecho #analisis",2023-04-28T13:20:00,"https://example.com/images/legal.jpg",["derecho"],15,3,17
+19,"Entrevista con el artista local #periodismo #arte",2023-04-27T18:10:00,"https://example.com/images/interview.jpg",["periodismo"],27,5,18
+20,"Mi nueva receta de pastel #reposteria #dulce",2023-04-26T12:30:00,"https://example.com/images/cake.jpg",["reposteria"],45,10,19
+21,"Consejos para cuidar a tu mascota #veterinaria #mascotas",2023-04-25T14:15:00,"https://example.com/images/pets.jpg",["veterinaria"],32,7,20
+22,"Estrategias para emprendedores #negocios #emprendimiento",2023-04-24T11:50:00,"https://example.com/images/business.jpg",["negocios"],28,6,21
+23,"Mi último proyecto de diseño #diseño #creativo",2023-04-23T16:40:00,"https://example.com/images/design.jpg",["diseño"],37,8,22
+24,"Avances en la construcción del puente #ingenieria #construccion",2023-04-22T09:25:00,"https://example.com/images/bridge.jpg",["ingenieria"],21,5,23
+25,"Recursos para aprender idiomas #idiomas #aprendizaje",2023-04-21T19:30:00,"https://example.com/images/languages.jpg",["idiomas"],24,4,24
+26,"Sesión fotográfica en el parque #fotografia #naturaleza",2023-04-20T15:10:00,"https://example.com/images/photoshot.jpg",["fotografia"],39,9,25
+27,"Consejos para una vida saludable #salud #bienestar",2023-04-19T12:45:00,"https://example.com/images/health.jpg",["salud"],31,7,26
+28,"Nuevo videojuego que estoy desarrollando #programacion #juegos",2023-04-18T17:20:00,"https://example.com/images/game.jpg",["programacion"],43,11,27
+29,"Métodos para enseñar matemáticas #educacion #matematicas",2023-04-17T10:30:00,"https://example.com/images/math.jpg",["educacion"],18,5,28
+30,"Mi rutina de entrenamiento diario #fitness #deporte",2023-04-16T08:15:00,"https://example.com/images/workout.jpg",["fitness"],33,6,29

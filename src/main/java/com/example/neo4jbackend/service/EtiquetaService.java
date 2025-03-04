@@ -5,8 +5,14 @@ import com.example.neo4jbackend.model.Etiqueta;
 import com.example.neo4jbackend.model.Publicacion;
 import com.example.neo4jbackend.repository.EtiquetaRepository;
 import com.example.neo4jbackend.repository.PublicacionRepository;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+
 import org.springframework.stereotype.Service;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -91,5 +97,50 @@ public class EtiquetaService {
 
     private EtiquetaDTO convertirADTO(Etiqueta etiqueta) {
         return new EtiquetaDTO(etiqueta.getNombre(), etiqueta.getPopularidad());
+    }
+
+    public void loadEtiquetasFromCSV(String filePath) {
+        int totalProcesadas = 0, totalGuardadas = 0;
+
+        try (CSVReader reader = new CSVReader(new FileReader(Paths.get(filePath).toFile()))) {
+            List<String[]> records = reader.readAll();
+            records.remove(0); 
+
+            System.out.println("Cargando etiquetas desde: " + filePath);
+
+            for (String[] record : records) {
+                try {
+                    totalProcesadas++;
+
+                    System.out.println("\nProcesando etiqueta:");
+                    System.out.println("Nombre: " + record[0]);
+                    System.out.println("Popularidad: " + record[1]);
+
+                    Etiqueta etiqueta = new Etiqueta(
+                        record[0], 
+                        Integer.parseInt(record[1]) 
+                    );
+
+                    etiquetaRepository.save(etiqueta);
+                    totalGuardadas++;
+                    System.out.println("Etiqueta guardada correctamente.");
+
+                } catch (NumberFormatException e) {
+                    System.err.println("Error de formato en popularidad: " + e.getMessage());
+                } catch (Exception e) {
+                    System.err.println("Error inesperado al procesar una etiqueta: " + e.getMessage());
+                }
+            }
+
+            System.out.println("\nResumen de carga de etiquetas:");
+            System.out.println("Total de etiquetas en el CSV: " + totalProcesadas);
+            System.out.println("Etiquetas guardadas en Neo4j: " + totalGuardadas);
+            System.out.println("Proceso completado.");
+
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo CSV: " + e.getMessage());
+        } catch (CsvException e) {
+            System.err.println("Error en el formato del CSV: " + e.getMessage());
+        }
     }
 }

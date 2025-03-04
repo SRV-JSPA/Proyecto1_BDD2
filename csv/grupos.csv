@@ -1,0 +1,16 @@
+id,nombre,descripcion,fechaCreacion,privacidad,creador_id
+1,"Programadores Java","Grupo para desarrolladores Java de todos los niveles",2023-01-20,"Público",1
+2,"Recetas Gourmet","Comparte tus mejores recetas y trucos de cocina",2023-02-05,"Público",7
+3,"Fotógrafos Aficionados","Espacio para compartir fotos y consejos de fotografía",2023-01-15,"Privado",3
+4,"Club de Lectura","Discusiones sobre libros y recomendaciones literarias",2023-03-01,"Público",2
+5,"Yoga y Meditación","Comunidad para compartir experiencias sobre yoga y meditación",2023-02-10,"Público",6
+6,"Estudiantes de Medicina","Soporte académico para estudiantes de medicina",2023-01-25,"Privado",8
+7,"Desarrollo Web","Grupo para programadores web y diseñadores",2023-03-05,"Público",5
+8,"Amantes del Arte","Espacio para discutir y compartir sobre arte en todas sus formas",2023-02-15,"Público",10
+9,"Viajeros del Mundo","Comparte tus aventuras y consejos de viaje",2023-01-30,"Público",4
+10,"Músicos Independientes","Red de apoyo para músicos y compositores",2023-03-10,"Privado",13
+11,"Psicología y Bienestar","Discusiones sobre salud mental y técnicas de bienestar",2023-02-20,"Público",14
+12,"Deportistas","Grupo para compartir rutinas y logros deportivos",2023-01-10,"Público",15
+13,"Arquitectura y Diseño","Comunidad para profesionales y estudiantes de arquitectura",2023-03-15,"Privado",16
+14,"Derecho y Política","Discusiones legales y políticas actuales",2023-02-25,"Público",17
+15,"Periodismo Independiente","Red de apoyo para periodistas y comunicadores",2023-01-05,"Privado",18

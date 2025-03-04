@@ -1,0 +1,31 @@
+id,contenido,fechaComentario,numLikes:int,autor_id,publicacion_id
+1,"Excelente post, me encantó",2023-05-15T11:00:00,5,2,1
+2,"¿Podrías compartir más detalles?",2023-05-15T11:30:00,3,3,1
+3,"Estoy de acuerdo con tu opinión",2023-05-14T19:15:00,7,4,2
+4,"Me gustaría probar esa receta",2023-05-14T20:00:00,4,5,2
+5,"Las fotos son impresionantes",2023-05-13T10:00:00,9,6,3
+6,"¿Qué equipo fotográfico usaste?",2023-05-13T10:45:00,3,7,3
+7,"Me inspiraste para mi próximo viaje",2023-05-13T12:30:00,6,8,3
+8,"Una reseña muy completa",2023-05-12T22:15:00,5,9,4
+9,"¿Cuál es tu libro favorito del autor?",2023-05-12T23:00:00,2,10,4
+10,"Gran proyecto, felicidades",2023-05-11T15:00:00,8,11,5
+11,"¿Qué técnicas utilizaste?",2023-05-11T16:30:00,4,12,5
+12,"Muy interesante análisis",2023-05-10T13:20:00,6,13,6
+13,"Totalmente de acuerdo con tus conclusiones",2023-05-10T14:45:00,5,14,6
+14,"Me encantaría unirme a tus clases",2023-05-09T09:15:00,7,15,7
+15,"¿Qué recomiendas para principiantes?",2023-05-09T10:30:00,4,16,7
+16,"Ánimo con los exámenes",2023-05-08T23:30:00,3,17,8
+17,"Comparte tus técnicas de estudio",2023-05-09T00:15:00,2,18,8
+18,"Impresionante implementación",2023-05-07T17:30:00,5,19,9
+19,"Me gustaría conocer más sobre ese algoritmo",2023-05-07T18:45:00,4,20,9
+20,"Tienes mucho talento",2023-05-06T20:15:00,10,21,10
+21,"¿Qué software utilizas?",2023-05-06T21:30:00,6,22,10
+22,"Hermosas fotos de la ciudad",2023-05-05T12:45:00,8,23,11
+23,"Me encantaría visitar ese lugar",2023-05-05T14:00:00,7,24,11
+24,"Una perspectiva histórica fascinante",2023-05-04T16:30:00,4,25,12
+25,"¿Podrías recomendar algunos libros sobre el tema?",2023-05-04T17:45:00,3,26,12
+26,"Increíble hallazgo científico",2023-05-03T11:30:00,9,27,13
+27,"¿Cuáles son las implicaciones de este descubrimiento?",2023-05-03T13:00:00,7,28,13
+28,"Me encantó tu composición",2023-05-02T21:30:00,12,29,14
+29,"¿Dónde podemos escuchar más de tu música?",2023-05-02T22:45:00,9,30,14
+30,"Gracias por compartir estas técnicas",2023-05-01T16:00:00,6,31,15
