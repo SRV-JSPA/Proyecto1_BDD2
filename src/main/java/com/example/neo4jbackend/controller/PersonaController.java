@@ -59,4 +59,12 @@ public class PersonaController {
     public List<Persona> obtenerSeguidos(@PathVariable String username) {
         return personaService.obtenerSeguidos(username);
     }
+
+    @PatchMapping("/{username}/quitar-propiedad/{propiedad}")
+    public ResponseEntity<String> quitarPropiedad(@PathVariable String username, @PathVariable String propiedad) {
+        boolean resultado = personaService.quitarPropiedad(username, propiedad);
+        return resultado ? ResponseEntity.ok("Propiedad " + propiedad + " eliminada con éxito.")
+                         : ResponseEntity.badRequest().body("Error: No se pudo eliminar la propiedad.");
+    }
+
 }

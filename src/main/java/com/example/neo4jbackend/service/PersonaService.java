@@ -81,6 +81,43 @@ public class PersonaService {
         return true;
     }
 
+    public boolean quitarPropiedad(String username, String propiedad) {
+        Optional<Persona> personaOpt = personaRepository.findByUsername(username).stream().findFirst();
+        
+        if (personaOpt.isEmpty()) {
+            return false;
+        }
+    
+        Persona persona = personaOpt.get();
+    
+        switch (propiedad) {
+            case "esCreador":
+                persona.setEsCreador(false);
+                break;
+            case "esEmpresa":
+                persona.setEsEmpresa(false);
+                break;
+            case "esPaginaDeFans":
+                persona.setEsPaginaDeFans(false);
+                break;
+            case "esCantante":
+                persona.setEsCantante(false);
+                break;
+            case "biografia":
+                persona.setBiografia(null);
+                break;
+            case "intereses":
+                persona.setIntereses(null);
+                break;
+            default:
+                return false; 
+        }
+    
+        personaRepository.save(persona);
+        return true;
+    }
+    
+
     public String seguirUsuario(String seguidorUsername, String seguidoUsername) {
         Optional<Persona> seguidorOpt = obtenerPersonaPorUsername(seguidorUsername);
         Optional<Persona> seguidoOpt = obtenerPersonaPorUsername(seguidoUsername);
